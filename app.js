@@ -38,10 +38,14 @@ app.use(express.static(path.join(__dirname,"/public")));
 const store=MongoStore.create({
   mongoUrl:dbUrl,
   crypto:{
-    secret:process.env.SECRET
+    secret:process.env.SECRET,
   },
   touchAfter:24*3600, //ye bar bar login na krna pde ek baar login kiya to 24hrs tak rhega
 });
+
+store.on("error",()=>{
+  console.log("Error is session store",err)
+})
 
 const sessionOptions={
                         store,
@@ -57,9 +61,7 @@ const sessionOptions={
 
 
 
-store.on("error",()=>{
-  console.log("Error is session store",err)
-})
+
 
 app.use(session(sessionOptions));
 app.use(flash());
